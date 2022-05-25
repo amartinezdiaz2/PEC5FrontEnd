@@ -1,0 +1,70 @@
+<div class="container my-5">
+    <div *ngIf="book" class="row animate__animated animate__bounce animate__fadeIn">
+        <div class="col-md-9">
+            <h1>{{book.title}}</h1>
+            <p><strong>Author:</strong> {{book.authors[0]}}</p>
+            <img class="rounded" src="{{book.imageLinks.smallThumbnail}}" alt="">
+            <p><strong>Description:</strong> {{book.description}}</p>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-danger" routerLink="/">Back</a>
+        </div>
+        <div class="col-md-9">
+            <button class="btn btn-secondary mb-3" (click)="show = !show">Show all details</button>
+            <div *ngIf="show">
+                <mat-tab-group class="mb-3 border border-secondary">
+                    <mat-tab label="Publisher">
+                        <p class="p-3"> {{book.publisher}} </p>
+                    </mat-tab>
+                    <mat-tab label="Published Date"> 
+                        <p class="p-3"> {{book.publishedDate}} </p>
+                    </mat-tab>
+                    <mat-tab label="Reading mode">
+                        <div class="d-flex flex-row pt-3 ps-3">
+                            <p><strong> Text:</strong></p>
+                            <div class="w-50 pt-3 ms-2">
+                                <mat-progress-bar  class="w-25" mode="determinate" value="0" *ngIf="!book.readingModes.text"></mat-progress-bar>
+                                <mat-progress-bar  class="w-25" mode="determinate" value="100" *ngIf="book.readingModes.text"></mat-progress-bar>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row ps-3 pb-3">
+                            <p><strong> Image:</strong></p>
+                            <div class="w-50 pt-3 ms-2">
+                                <mat-progress-bar  class="w-25" mode="determinate" value="0" *ngIf="!book.readingModes.image"></mat-progress-bar>
+                                <mat-progress-bar  class="w-25" mode="determinate" value="100" *ngIf="book.readingModes.image"></mat-progress-bar>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Page Count"> 
+                        <p class="p-3"> {{book.pageCount}} </p> 
+                    </mat-tab>
+                    <mat-tab label="Language"> 
+                        <p class="p-3"> {{book.language}} </p>
+                    </mat-tab>
+                </mat-tab-group>
+                <!--TREE-->
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree my-4">
+                    <mat-tree-node class="p-2 rounded bg-opacity" *matTreeNodeDef="let node" matTreeNodeToggle>
+                        {{node.name}}
+                    </mat-tree-node>
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                        <div class="mat-tree-node bg-opacity">
+                            <button mat-icon-button matTreeNodeToggle
+                                    [attr.aria-label]="'Toggle ' + node.name"
+                                    class="bg-transparent border-0">
+                            <mat-icon class="mat-icon-rtl-mirror">
+                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                            </button>
+                            {{node.name}}
+                        </div>
+                        <div [class.example-tree-invisible]="!treeControl.isExpanded(node)"
+                            role="group">
+                            <ng-container matTreeNodeOutlet></ng-container>
+                        </div>
+                    </mat-nested-tree-node>
+                </mat-tree>
+            </div>
+        </div>
+    </div>
+</div>
